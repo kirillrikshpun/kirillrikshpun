@@ -1,19 +1,17 @@
 import Conversation from "../../components/conversations/Conversation";
 import Message from "../../components/message/Message";
 import UsersBar from "../../components/usersBar/UsersBar";
-
-import { useContext, useEffect, useRef, useState } from "react";
+import MuiAppBar from "@mui/material/AppBar";
+import { useContext, styled, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { ConvContext } from "../../context/ConvContext";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import Drawer from "@mui/material/Drawer";
+import Typography from "@mui/material/Typography";
 
 import { useTheme } from "@mui/material/styles";
-import {
-  OutlinedInput,
-  Box,
-  Grid,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { OutlinedInput, Box, Grid, makeStyles } from "@material-ui/core";
 import { Card } from "react-bootstrap";
 
 import axios from "axios";
@@ -107,6 +105,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const drawerWidth = 240;
+
 export default function Messenger() {
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -116,6 +116,12 @@ export default function Messenger() {
   const socket = useRef(io("ws://localhost:8900"));
   const { user } = useContext(AuthContext);
   const { conv } = useContext(ConvContext);
+  const theme = useTheme();
+  const [open, setOpen] = useState(false);
+
+  const toggleDrawerOpen = () => {
+    setOpen(!open);
+  };
 
   const classes = useStyles();
 
@@ -205,75 +211,94 @@ export default function Messenger() {
 
   return (
     <>
-      <>
-        <Grid classes={{ root: classes.messenger }} container>
-          <Grid item xs={2} style={{ backgroundColor: "#2E2E4F" }}>
-            <Box className={classes.conversationList}>
-              <Box className={classes.messengerHead}>
-                <Typography variant="h1">The ROOM</Typography>
-              </Box>
+      <Grid classes={{ root: classes.messenger }} container>
+        <Grid item xs={3} style={{ backgroundColor: "#2E2E4F" }}>
+          <Box className={classes.conversationList}>
+            <Box className={classes.messengerHead}>
+              <Typography variant="h3">The ROOM</Typography>
+            </Box>
 
-              <Box>
-                {conv.map((c) => (
-                  <>
-                    <Box
-                      className={classes.conversationItem}
-                      key={c._id}
-                      onClick={() => setCurrentChat(c)}
-                    >
-                      <Card className={classes.conversationCard}>
-                        <Conversation conversation={c} currentUser={user} />
-                      </Card>
-                    </Box>
-                  </>
-                ))}
-              </Box>
-            </Box>
-          </Grid>
-          <Grid item xs={8}>
             <Box>
-              <Box className={classes.messengerHead}>
-                <Typography variant="h1">{user.username}</Typography>
-              </Box>
-              <Box className={classes.chatWrapper}>
-                {currentChat ? (
-                  <>
-                    <Box className={classes.chat}>
-                      {messages.map((m) => (
-                        <Box ref={scrollRef}>
-                          <Message message={m} own={m.sender === user._id} />
-                        </Box>
-                      ))}
-                    </Box>
-                    <Box className={classes.chatBoxBottom}>
-                      <Box className={classes.chatMessageInput}>
-                        <OutlinedInput
-                          className={classes.chatTextArea}
-                          onChange={(e) => setNewMessage(e.target.value)}
-                          placeholder="Please enter text"
-                        />
-                        <button
-                          className={classes.chatSubmitButton}
-                          onClick={handleSubmit}
-                        >
-                          Send
-                        </button>
-                      </Box>
-                    </Box>
-                  </>
-                ) : (
-                  <Box className={classes.noConversationText}>
-                    Open a conversation to start a chat...
+              {conv.map((c) => (
+                <>
+                  <Box
+                    className={classes.conversationItem}
+                    key={c._id}
+                    onClick={() => setCurrentChat(c)}
+                  >
+                    <Card className={classes.conversationCard}>
+                      <Conversation conversation={c} currentUser={user} />
+                    </Card>
                   </Box>
-                )}
-              </Box>
+                </>
+              ))}
             </Box>
-          </Grid>
-          <Grid item xs={2}>
-            <Box className={classes.userslist}>{InsideDrower}</Box>
-          </Grid>
+          </Box>
         </Grid>
-      </>
+
+        <Grid item xs={9}>
+          <Box>
+            <Box className={classes.messengerHead}>
+              <Typography variant="h3">{user.username}</Typography>
+              <IconButton
+                // color="inherit"
+                // aria-label="open drawer"
+                onClick={toggleDrawerOpen}
+                // sx={{ mr: 2, ...(open && { display: "none" }) }}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Box>
+
+            <Box className={classes.chatWrapper}>
+              {currentChat ? (
+                <>
+                  <Box className={classes.chat}>
+                    {messages.map((m) => (
+                      <Box ref={scrollRef}>
+                        <Message message={m} own={m.sender === user._id} />
+                      </Box>
+                    ))}
+                  </Box>
+                  <Box className={classes.chatBoxBottom}>
+                    <Box className={classes.chatMessageInput}>
+                      <OutlinedInput
+                        className={classes.chatTextArea}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        placeholder="Please enter text"
+                      />
+                      <button
+                        className={classes.chatSubmitButton}
+                        onClick={handleSubmit}
+                      >
+                        Send
+                      </button>
+                    </Box>
+                  </Box>
+                </>
+              ) : (
+                <Box className={classes.noConversationText}>
+                  Open a conversation to start a chat...
+                </Box>
+              )}
+            </Box>
+          </Box>
+          <Drawer
+            sx={{
+              width: drawerWidth,
+              flexShrink: 0,
+              "& .MuiDrawer-paper": {
+                width: drawerWidth,
+              },
+            }}
+            variant="persistent"
+            anchor="right"
+            open={open}
+          >
+            <Box className={classes.userslist}>{InsideDrower}</Box>
+          </Drawer>
+        </Grid>
+      </Grid>
     </>
   );
 }

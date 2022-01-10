@@ -44,6 +44,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "12px",
     marginTop: "20px",
   },
+
+  messageText: {
+    lineBreak: "anywhere",
+  },
 }));
 
 export default function Message({ message, own }) {
@@ -53,7 +57,7 @@ export default function Message({ message, own }) {
     <Box className={own ? classes.rootRight : classes.rootLeft}>
       <Box className={own ? classes.messageRight : classes.messageLeft}>
         <img className={classes.messageImg} src={photo} alt="" />
-        <Typography>{message.text}</Typography>
+        <Typography className={classes.messageText}>{message.text}</Typography>
         <Box className={classes.messageBottom}>{format(message.createdAt)}</Box>
       </Box>
     </Box>

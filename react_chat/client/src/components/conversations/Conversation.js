@@ -46,6 +46,7 @@ export default function Conversation({ conversation, currentUser }) {
       >
         <CardContent
           sx={{
+            alignItems: "center",
             color: "#DBD9FA",
             display: "flex",
             justifyContent: "space-between",

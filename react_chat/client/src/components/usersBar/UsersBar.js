@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { Box, makeStyles } from "@material-ui/core";
+import { Box, makeStyles, Typography } from "@material-ui/core";
 
 import { AuthContext } from "../../context/AuthContext";
 import { ConvContext } from "../../context/ConvContext";
 
 const useStyles = makeStyles(() => ({
   rightbarFollowButton: {
+    width: "50%",
+    justifyContent: "center",
     marginTop: "30px",
     marginBottom: "10px",
     border: "none",
@@ -19,6 +21,7 @@ const useStyles = makeStyles(() => ({
     fontSize: "16px",
     fontWeight: "500",
     cursor: "pointer",
+    width: "7em",
   },
 
   input: {
@@ -81,16 +84,25 @@ export default function UsersBar() {
       return "";
     } else
       return (
-        <ul>
+        <Typography>
           {users
             .filter((u) =>
               u.username.toLowerCase().includes(search.toLowerCase())
             )
             .map((item, key) => (
-              <Box style={{ display: "flex" }}>
-                <ul style={{ color: "#3D3D5D" }} key={key}>
+              <Box
+                style={{
+                  alignItems: "baseline",
+                  justifyContent: "space-around",
+                  display: "flex",
+                }}
+              >
+                <Typography
+                  style={{ width: "50%", color: "#3D3D5D" }}
+                  key={key}
+                >
                   {item.username}
-                </ul>
+                </Typography>
                 <button
                   className={classes.rightbarFollowButton}
                   onClick={() => {
@@ -106,7 +118,7 @@ export default function UsersBar() {
                 </button>
               </Box>
             ))}
-        </ul>
+        </Typography>
       );
   };
 
