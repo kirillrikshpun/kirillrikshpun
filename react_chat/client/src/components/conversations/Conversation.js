@@ -4,10 +4,14 @@ import { makeStyles, Typography, Box } from "@material-ui/core";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import DeleteConvButton from "../conversations/DeleteConvButton/DeleteConvButton";
+import DeleteConvButton from "../conversations/DeleteConvButton";
 import photo from "../../photo.png";
 
-export default function Conversation({ conversation, currentUser }) {
+export default function Conversation({
+  setCurrentChat,
+  conversation,
+  currentUser,
+}) {
   const [user, setUser] = useState(null);
 
   const useStyles = makeStyles((theme) => ({
@@ -20,12 +24,18 @@ export default function Conversation({ conversation, currentUser }) {
         backgroundColor: "#363656",
       },
     },
+    conversationItem: {
+      transition: "0.7s",
+      flex: "1 1 30%",
+      margin: "0.1px",
+    },
   }));
 
   const classes = useStyles();
 
   useEffect(() => {
     const companionId = conversation.members.find((m) => m !== currentUser._id);
+    console.log();
 
     const getUser = async () => {
       try {
@@ -39,50 +49,58 @@ export default function Conversation({ conversation, currentUser }) {
   }, [currentUser, conversation]);
 
   return (
-    <Card className={classes.conversation} sx={{ display: "flex" }}>
-      <Box
-        className={classes.conversation}
-        sx={{ display: "flex", flexDirection: "column" }}
-      >
-        <CardContent
-          sx={{
-            alignItems: "center",
-            color: "#DBD9FA",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <CardMedia
-            component="img"
-            style={{
-              borderRadius: "50%",
-              display: "flex",
-            }}
-            sx={{ width: 70 }}
-            image={photo}
-          />
-
-          <Typography
-            style={{ cursor: "pointer" }}
-            variant="subtitle1"
-            color="text.secondary"
-            component="div"
-          >
-            {user?.username}
-          </Typography>
-
+    <Box
+      className={classes.conversationItem}
+      key={conversation._id}
+      onClick={() => setCurrentChat(conversation)}
+    >
+      <Card>
+        <Card className={classes.conversation} sx={{ display: "flex" }}>
           <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              pl: 1,
-              pb: 1,
-            }}
+            className={classes.conversation}
+            sx={{ display: "flex", flexDirection: "column" }}
           >
-            <DeleteConvButton currConv={conversation} currentUser={user} />
+            <CardContent
+              sx={{
+                alignItems: "center",
+                color: "#DBD9FA",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <CardMedia
+                component="img"
+                style={{
+                  borderRadius: "50%",
+                  display: "flex",
+                }}
+                sx={{ width: 70 }}
+                image={photo}
+              />
+
+              <Typography
+                style={{ cursor: "pointer" }}
+                variant="subtitle1"
+                color="text.secondary"
+                component="div"
+              >
+                {user?.username}
+              </Typography>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  pl: 1,
+                  pb: 1,
+                }}
+              >
+                <DeleteConvButton currConv={conversation} currentUser={user} />
+              </Box>
+            </CardContent>
           </Box>
-        </CardContent>
-      </Box>
-    </Card>
+        </Card>
+      </Card>
+    </Box>
   );
 }

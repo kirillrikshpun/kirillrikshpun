@@ -3,8 +3,8 @@ import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Box } from "@material-ui/core";
 
-import { AuthContext } from "../../../context/AuthContext";
-import { ConvContext } from "../../../context/ConvContext";
+import { AuthContext } from "../../context/AuthContext";
+import { ConvContext } from "../../context/ConvContext";
 
 export default function DeleteConvButton({ currConv }) {
   const { user: currentUser, fetchUser } = useContext(AuthContext);

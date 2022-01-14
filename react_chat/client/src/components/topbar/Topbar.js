@@ -1,31 +1,32 @@
 import { useContext } from "react";
-import { Typography, Box, makeStyles } from "@material-ui/core";
-import { AuthContext } from "../../context/AuthContext";
+import { Box, makeStyles } from "@material-ui/core";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import Typography from "@mui/material/Typography";
 
-const useStyles = makeStyles(() => ({
-  topbarContainer: {
+const useStyles = makeStyles((theme) => ({
+  messengerHead: {
+    color: "#DBD9FA",
     height: "50px",
-    width: "100%",
-    backgroundColor: "#42108800",
-    alignItems: "center",
-    display: "flex",
-    alignItems: "center",
-    position: "sticky",
-    top: "0",
-    zIndex: "999",
+    padding: "10px",
+    backgroundColor: "#2E2E4F",
   },
 }));
 
-export default function Topbar() {
-  const { user } = useContext(AuthContext);
-
+export default function Topbar({ user, toggleDrawerOpen }) {
   const classes = useStyles();
 
   return (
-    <Box className={classes.topbarContainer}>
-      <Box style={{ flex: "3" }}>
-        <Typography variant="h1">{user.username}</Typography>
+    <>
+      <Box className={classes.messengerHead}>
+        <Typography variant="h3">{user.username}</Typography>
+        <IconButton
+          onClick={toggleDrawerOpen}
+          // sx={{ mr: 2, ...(open && { display: "none" }) }}
+        >
+          <MenuIcon />
+        </IconButton>
       </Box>
-    </Box>
+    </>
   );
 }

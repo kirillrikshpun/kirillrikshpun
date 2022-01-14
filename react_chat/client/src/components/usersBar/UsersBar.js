@@ -43,10 +43,6 @@ export default function UsersBar() {
   const classes = useStyles();
 
   useEffect(() => {
-    console.log("render");
-  }, []);
-
-  useEffect(() => {
     fetchUsersBar();
   }, [currentUser]);
 
